@@ -8,6 +8,12 @@
     #app {
         text-align: center;
     }
+    .pink {
+        background-color: pink;
+    }
+    .skyblue {
+        background-color: skyblue;
+    }
 </style>
 <body>
     <div id="app">
@@ -15,6 +21,20 @@
         <input v-model="name">
         <h1>{{name}}</h1>
         <button v-on:click="clickMe">click me!</button>
+        <div v-if="flag">
+            <p>v-if的显示</p>
+            <div v-if="flag2">嵌套的v-if的显示</div>
+        </div>
+        <div v-show="show">v-show的显示</div>
+        <div v-bind:class="activeClass">bind绑定属性</div>
+        <ul>
+            <li v-for='item of list' style="border: 2px solid green;">
+                {{ item }}
+                <div>{{title}}</div>
+                <p>v-for里面的其他内容支持</p>
+            </li>
+            <p>位置问题以及初始list为空[]问题解决</p>
+        </ul>
     </div>
 </body>
 <script src="js/observer.js"></script>
@@ -23,11 +43,16 @@
 <script src="js/index.js"></script>
 <script type="text/javascript">
 
-     new SelfVue({
+     let aaa = new SelfVue({
         el: '#app',
         data: {
             title: 'hello world',
-            name: 'canfoo'
+            name: 'canfoo',
+            flag: true,
+            flag2: true,
+            list: [1, 2],
+            show: false,
+            activeClass: "pink"
         },
         methods: {
             clickMe: function () {
@@ -37,6 +62,11 @@
         mounted: function () {
             window.setTimeout(() => {
                 this.title = '你好';
+                // this.flag = false;
+                this.flag2 = false;
+                this.show = true;
+                this.list.push(3);
+                this.activeClass = "skyblue";
             }, 1000);
         }
     });
