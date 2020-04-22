@@ -18,6 +18,7 @@
 <body>
     <div id="app">
         <h2>{{title}}</h2>
+        <h3>{{reverseTitle}}</h3>
         <input v-model="name">
         <h1>{{name}}</h1>
         <button v-on:click="clickMe">click me!</button>
@@ -69,14 +70,16 @@
         watch: {
             firstName: function (val, oldVal) {
                 this.fullName = val + ' ' + this.lastName + ' ' + '之前名是' + oldVal
+                console.log('firstName')
             },
             lastName: function (val, oldVal) {
                 this.fullName = this.firstName + ' ' + val + ' ' + '之前姓是' + oldVal
+                console.log('lastName')
             }
         },
         computed: {
-            fullName: function () {
-                return this.firstName + ' ' + this.lastName
+            reverseTitle: function () {
+                return this.title.split('').reverse().join('')
             }
         },
         mounted: function () {
