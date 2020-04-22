@@ -27,6 +27,9 @@
         </div>
         <div v-show="show">v-show的显示</div>
         <div v-bind:class="activeClass">bind绑定属性</div>
+        <div>{{firstName}}</div>
+        <div>{{lastName}}</div>
+        <div>{{fullName}}</div>
         <ul>
             <li v-for='item of list' style="border: 2px solid green;">
                 {{ item }}
@@ -40,10 +43,11 @@
 <script src="js/observer.js"></script>
 <script src="js/watcher.js"></script>
 <script src="js/compile.js"></script>
+<script src="js/arrayListener.js"></script>
 <script src="js/index.js"></script>
 <script type="text/javascript">
 
-     let aaa = new SelfVue({
+    new SelfVue({
         el: '#app',
         data: {
             title: 'hello world',
@@ -52,11 +56,27 @@
             flag2: true,
             list: [1, 2],
             show: false,
-            activeClass: "pink"
+            activeClass: "pink",
+            firstName: 'lily',
+            lastName: 'smith',
+            fullName: 'lily smith'
         },
         methods: {
             clickMe: function () {
                 this.title = 'hello world';
+            }
+        },
+        watch: {
+            firstName: function (val, oldVal) {
+                this.fullName = val + ' ' + this.lastName + ' ' + '之前名是' + oldVal
+            },
+            lastName: function (val, oldVal) {
+                this.fullName = this.firstName + ' ' + val + ' ' + '之前姓是' + oldVal
+            }
+        },
+        computed: {
+            fullName: function () {
+                return this.firstName + ' ' + this.lastName
             }
         },
         mounted: function () {
@@ -65,11 +85,15 @@
                 // this.flag = false;
                 this.flag2 = false;
                 this.show = true;
-                this.list.push(3);
+                // this.list = [1, 2, 3];
+                this.list.push(4);
                 this.activeClass = "skyblue";
+                this.firstName = 'lucy';
+                this.lastName = 'Li'
             }, 1000);
         }
     });
+
 
 </script>
 </html>

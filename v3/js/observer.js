@@ -6,13 +6,25 @@ function Observer(data) {
 Observer.prototype = {
     walk: function (data) {
         var self = this;
-        Object.keys(data).forEach(function (key) {
-            self.defineReactive(data, key, data[key]);
+        let handler = {
+            get (target, prop, args) {
+                if (typeof target[prop] === "function") {
+                    return target[prop].bind(target)
+                }
+                return target[prop]
+            }
+        }
+        let proxy = new Proxy(data, handler)
+        Object.keys(proxy).forEach(function (key) {
+
+            self.defineReactive(proxy, key, proxy[key]);
+
+
         });
     },
     defineReactive: function (data, key, val) {
-        var dep = new Dep();
-        var childObj = observe(val);
+        let dep = new Dep();
+        let childObj = observe(val);
         Object.defineProperty(data, key, {
             enumerable: true,
             configurable: true,

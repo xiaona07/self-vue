@@ -2,11 +2,11 @@ function SelfVue (options) {
     var self = this;
     this.data = options.data;
     this.methods = options.methods;
+    this.watch = options.watch;
 
     Object.keys(this.data).forEach(function(key) {
         self.proxyKeys(key);
     });
-
     observe(this.data);
     new Compile(options.el, this);
     options.mounted.call(this); // 所有事情处理好后执行mounted函数

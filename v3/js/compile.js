@@ -56,6 +56,10 @@ Compile.prototype = {
                 } else if (self.isIfDirective(dir, index)) {
                     self.compileIf(node, self.vm, exp, dir, index);
                 } else if (self.isForDirective(dir)) {
+                    console.log(node)
+                    let node2 = node.cloneNode(true)
+                    console.log(node2)
+                    console.log('hahahaha')
                     self.compileFor(node, self.vm, exp, dir, attrName);
                 } else if (self.isShowDirective(dir)) {
                     self.compileShow(node, self.vm, exp, dir);
@@ -108,16 +112,17 @@ Compile.prototype = {
         new Watcher(this.vm, exp, function (value) {
             self.ifUpdater(node, value);
         });
+
     },
     compileFor: function (node, vm, exp, dir, attrName) {
         let self = this;
         let item = exp.split(' of ')[0]
         let listName = exp.split(' of ')[1]
-        let list = this.vm[listName];
+        let list = this.vm[listName]
         let fragmentAll = document.createDocumentFragment();
         node.removeAttribute(attrName);
         vm.forClone = node.cloneNode(true)
-        for (itm of list) {
+        for (const itm of list) {
             let clone = node.cloneNode(true)
             self.changeTextNode(clone, item, itm)
             fragmentAll.appendChild(clone)
@@ -129,10 +134,15 @@ Compile.prototype = {
         node.parentNode.insertBefore(fragmentAll, node)
         // node.parentNode.removeChild(node)
         node.style.display = "none"
-        vm.forNum = 0
+        // vm.forNum = 0
+        console.log(node.cloneNode(true))
         new Watcher(vm, listName, function (value) {
             self.forUpdater2(vm, item, node, value);
         });
+        patchArray(list, (add, del, res) => {
+            this.vm[listName] = res
+            // self.forUpdater2(vm, item, node, res);
+        })
 },
     compileShow: function (node, vm, exp, dir) {
         var self = this;
@@ -178,14 +188,17 @@ Compile.prototype = {
         //     vm.forNum = 1
         // }
         node.remove()
-        console.log(999)
+        console.log('删除了之前的节点')
     },
     forUpdater2: function (vm, item, node, value) {
+        console.log(node.cloneNode(true))
         let self = this
         // if (vm.forNum < 1) {
             let fragmentAll2 = document.createDocumentFragment()
-            for (itm of value) {
+            for (const itm of value) {
                 let clone2 = vm.forClone.cloneNode(true)
+                // let clone2 = node.cloneNode(true)
+                // clone2.style.display = "block"
                 self.changeTextNode(clone2, item, itm)
                 fragmentAll2.appendChild(clone2)
             }
